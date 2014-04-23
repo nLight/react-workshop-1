@@ -22,6 +22,11 @@
           return(
             <div className="container">
               <h1>Калькулятор</h1>
+              <div className="panel panel-default">
+                <div className="panel-body">
+                  <InputForm addItem={this.handleAdd} />
+                </div>
+              </div>
 
               <Table items={this.state.items} />
             </div>
@@ -73,6 +78,42 @@
           );
         }
       });
+
+      var InputForm = React.createClass({
+        getInitialState: function() {
+          return {name: "", date: "", amount: ""}
+        },
+        render: function() {
+          return(
+            <form className="form-inline" onSubmit={this.handleSubmit} role="form">
+              <div className="form-group">
+                <input className="form-control" 
+                       type="text" 
+                       name="name" 
+                       placeholder="Name"
+                       value={this.state.name} />
+              </div>
+              <div className="form-group">
+                <input className="form-control" 
+                       type="text" 
+                       name="date" 
+                       value={this.state.date} 
+                       placeholder="Date" />
+              </div>
+              <div className="form-group">
+              <input className="form-control" 
+                     type="text" 
+                     name="amount" 
+                     value={this.state.amount} 
+                     placeholder="Amount" />
+              </div>
+
+              <button className="btn btn-primary">Add</button>
+            </form>
+          );
+        }
+      });
+
       React.renderComponent(
         <Calculator />,
         document.body
