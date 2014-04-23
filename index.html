@@ -83,6 +83,15 @@
         getInitialState: function() {
           return {name: "", date: "", amount: ""}
         },
+        handleNameChange: function(e) {
+          this.setState({name: e.target.value});
+        },
+        handleDateChange: function(e) {
+          this.setState({date: e.target.value});
+        },
+        handleAmountChange: function(e) {
+          this.setState({amount: parseInt(e.target.value, 10)});
+        },
         render: function() {
           return(
             <form className="form-inline" onSubmit={this.handleSubmit} role="form">
@@ -91,21 +100,24 @@
                        type="text" 
                        name="name" 
                        placeholder="Name"
-                       value={this.state.name} />
+                       value={this.state.name} 
+                       onChange={this.handleNameChange} />
               </div>
               <div className="form-group">
                 <input className="form-control" 
                        type="text" 
                        name="date" 
                        value={this.state.date} 
-                       placeholder="Date" />
+                       placeholder="Date"
+                       onChange={this.handleDateChange} />
               </div>
               <div className="form-group">
               <input className="form-control" 
                      type="text" 
                      name="amount" 
                      value={this.state.amount} 
-                     placeholder="Amount" />
+                     placeholder="Amount"
+                     onChange={this.handleAmountChange} />
               </div>
 
               <button className="btn btn-primary">Add</button>
