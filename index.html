@@ -18,6 +18,14 @@
             ]
           };
         },
+
+        handleAdd: function(name, date, amount) {
+          var newItem = {id: this.state.items.length + 1, name: name, date: date, amount: amount};
+          var newState = this.state.items.slice(0);
+          newState.push(newItem);
+          this.setState({items: newState});
+        },
+
         render: function(){
           return(
             <div className="container">
@@ -82,6 +90,10 @@
       var InputForm = React.createClass({
         getInitialState: function() {
           return {name: "", date: "", amount: ""}
+        },
+        handleSubmit: function(e) {
+          e.preventDefault();
+          this.props.addItem(this.state.name, this.state.date, this.state.amount);
         },
         handleNameChange: function(e) {
           this.setState({name: e.target.value});
