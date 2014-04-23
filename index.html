@@ -7,5 +7,42 @@
     <script src="JSXTransformer.js"></script>
   </head>
   <body>
+    <script type="text/jsx">
+      /** @jsx React.DOM */
+
+      var Calculator = React.createClass({
+        render: function(){
+          return(
+            <table className="table table-bordered">
+              <thead>
+                <tr key="head">
+                  <th>Название</th>
+                  <th>Дата</th>
+                  <th>Деньги</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>MacBook Air</td>
+                  <td>14.07.2014</td>
+                  <td>-20000</td>
+                </tr>
+                
+                <tr className="info" key="total">
+                  <th>Итого</th>
+                  <th></th>
+                  <th>-20000</th>
+                </tr>
+              </tbody>
+            </table>
+          );
+        }
+      });
+      React.renderComponent(
+        <Calculator />,
+        document.body
+      );
+    </script>
+
   </body>
 </html>
