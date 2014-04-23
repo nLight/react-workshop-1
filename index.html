@@ -20,6 +20,10 @@
         },
 
         handleAdd: function(name, date, amount) {
+          if(name === "" || date === "" || amount === "") {
+            return false;
+          }
+          
           var newItem = {id: this.state.items.length + 1, name: name, date: date, amount: amount};
           var newState = this.state.items.slice(0);
           newState.push(newItem);
