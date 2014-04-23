@@ -11,7 +11,21 @@
       /** @jsx React.DOM */
 
       var Calculator = React.createClass({
+        getInitialState: function(){
+          return {
+            items: [
+              {id: 1, name: "MacBook Air", date: "14.07.2014", amount: -20000}
+            ]
+          };
+        },
         render: function(){
+          var total = 0;
+
+          var rows = this.state.items.map(function(item){
+            total += item.amount;
+            return <TableRow key={item.id} name={item.name} date={item.date} amount={item.amount} />
+          });
+
           return(
             <table className="table table-bordered">
               <thead>
@@ -21,20 +35,29 @@
                   <th>Деньги</th>
                 </tr>
               </thead>
+
               <tbody>
-                <tr>
-                  <td>MacBook Air</td>
-                  <td>14.07.2014</td>
-                  <td>-20000</td>
-                </tr>
-                
+                {rows}
+
                 <tr className="info" key="total">
                   <th>Итого</th>
                   <th></th>
-                  <th>-20000</th>
+                  <th>{total}</th>
                 </tr>
               </tbody>
             </table>
+          );
+        }
+      });
+
+      var TableRow = React.createClass({
+        render: function() {
+          return(
+            <tr>
+              <td>{this.props.name}</td>
+              <td>{this.props.date}</td>
+              <td>{this.props.amount}</td>
+            </tr>
           );
         }
       });
