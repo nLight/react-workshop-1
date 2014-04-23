@@ -3,7 +3,7 @@
   <head>
     <title>React JS Workshop</title>
     <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css">
-    <script src="react.js"></script>
+    <script src="react-with-addons.min.js"></script>
     <script src="JSXTransformer.js"></script>
   </head>
   <body>
@@ -23,7 +23,7 @@
           if(name === "" || date === "" || amount === "") {
             return false;
           }
-          
+
           var newItem = {id: this.state.items.length + 1, name: name, date: date, amount: amount};
           var newState = this.state.items.slice(0);
           newState.push(newItem);
@@ -85,8 +85,12 @@
 
       var TableRow = React.createClass({
         render: function() {
+          var classes = React.addons.classSet({
+            'danger': this.props.amount < -10000
+          });
+
           return(
-            <tr>
+            <tr className={classes}>
               <td>{this.props.name}</td>
               <td>{this.props.date}</td>
               <td>{this.props.amount}</td>
