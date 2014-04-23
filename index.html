@@ -113,7 +113,17 @@
           this.setState({name: e.target.value});
         },
         handleDateChange: function(e) {
-          this.setState({date: e.target.value});
+          var val = e.target.value;
+          
+          valid_date = /^\d{1,2}$/.test(val) || 
+                       /^\d{2}\.$/.test(val) || 
+                       /^\d{2}\.\d{1,2}$/.test(val) || 
+                       /^\d{2}\.\d{2}\.$/.test(val) || 
+                       /^\d{2}\.\d{2}\.\d{1,4}$/.test(val);
+
+          if(valid_date){
+            this.setState({date: val});  
+          }
         },
         handleAmountChange: function(e) {
           this.setState({amount: parseInt(e.target.value, 10)});
