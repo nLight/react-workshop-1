@@ -31,18 +31,6 @@
           };
         },
 
-        updateState: function(lens, value) {
-          // set returns a new copy state, so no mutation here
-          var newState = lens(this.state, value);
-          console.log(newState, this.state);
-
-          this.setState(newState);
-        },
-
-        getState: function(lens) {
-          return lens(this.state);
-        },
-
         render: function(){
           var that = this;
           var full = Tscope.makeCursor(
