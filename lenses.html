@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>React JS Lenses</title>
+    <script src="react-with-addons.min.js"></script>
+    <script src="JSXTransformer.js"></script>
+        
+    <script src="tscope.js"></script>
+  </head>
+  <body>
+    <script type="text/jsx">
+      /** @jsx React.DOM */
+
+      // 1. Passing a component specific piece of a state and let the component deal with it's internals
+      // 2. Giving a name to this piece of a state
+      // 3. React specific: it often unclear where one should put a state. 
+      //    With lenses we can put it in the root component or even outside of react
+
+      var Root = React.createClass({
+        getInitialState: function(){
+          return {
+            some: {
+              deep: [
+                {
+                  structure: {
+                    button: {label: "I'm very deep!"}
+                  } 
+                }
+              ]
+            }
+          };
+        },
+
+        updateState: function(lens, value) {
+          // set returns a new copy state, so no mutation here
+          var newState = lens(this.state, value);
+          console.log(newState, this.state);
+
+          this.setState(newState);
+        },
+
+        getState: function(lens) {
+          return lens(this.state);
+        },
+
+        render: function(){
+          // Create lenses for our structure
+          // Order is not important here, these are granular lenses
+          // var L = Lenses.makeLenses(['button', 'some', 'structure', 'deep', 'label']);
+
+          // Point to Button's piece of a state
+          // Simple composition:
+          // 1. get 'some' field of an Object
+          // 2. get 'deep' field of the result
+          // 3. get 0 element of the result 
+          // ...
+          // var deepLens = Tscope.attr('some', 'deep').then(Tscope.at(0)).then('structure', 'button');
+          var deepLens = Tscope.attr('some', 'deep', 0, 'structure', 'button');
+          
+          // I heard you like lenses... Lenses are composable so we can compose a composition with other lenses :)
+          var deepLensLabel = deepLens.then(Tscope.attr('label'));
+
+          // Instead of 
+          //  this.state.some.deep[0].structure.button.label
+          //  
+          // We can use verbose name:
+          //  Lenses.view(deepLensLabel, this.state)
+
+          return(
+            <div className="container">              
+              <Button lens={deepLens} 
+                      viewLens={this.getState.bind(this)} 
+                      updateLens={this.updateState.bind(this)} /> 
+              <br/>
+              {this.state.some.deep[0].structure.button.label} == {deepLensLabel(this.state)}
+            </div>
+          );
+        }
+      });
+
+      var Button = React.createClass({
+
+        handleClick: function (lens) {
+          this.props.updateLens(lens, 'Hello from the deep!');
+        },
+
+        render: function() {
+          var labelLens = this.props.lens.then(Tscope.attr('label'));
+
+          return (
+            <button onClick={this.handleClick.bind(this, labelLens)}>{this.props.viewLens(labelLens)}</button>
+          );
+        }
+
+      });
+
+      React.renderComponent(
+        <Root />,
+        document.body
+      );
+    </script>
+
+  </body>
+</html>
