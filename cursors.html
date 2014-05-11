@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>React JS Lenses</title>
+    <script src="react-with-addons.min.js"></script>
+    <script src="JSXTransformer.js"></script>
+        
+    <script src="tscope.js"></script>
+  </head>
+  <body>
+    <script type="text/jsx">
+      /** @jsx React.DOM */
+
+      // 1. Passing a component specific piece of a state and let the component deal with it's internals
+      // 2. Giving a name to this piece of a state
+      // 3. React specific: it often unclear where one should put a state. 
+      //    With lenses we can put it in the root component or even outside of react
+
+      var Root = React.createClass({
+        getInitialState: function(){
+          return {
+            some: {
+              deep: [
+                {
+                  structure: {
+                    button: {label: "I'm very deep!"}
+                  } 
+                }
+              ]
+            }
+          };
+        },
+
+        updateState: function(lens, value) {
+          // set returns a new copy state, so no mutation here
+          var newState = lens(this.state, value);
+          console.log(newState, this.state);
+
+          this.setState(newState);
+        },
+
+        getState: function(lens) {
+          return lens(this.state);
+        },
+
+        render: function(){
+          var that = this;
+          var full = Tscope.makeCursor(
+            function () {return that.state},
+            function (value) {return that.setState(value)}
+          );
+          var deepCursor = full.then(Tscope.attr('some', 'deep', 0, 'structure', 'button'));
+
+          return(
+            <div className="container">              
+              <Button cursor={deepCursor} /> 
+              <br/>
+              {this.state.some.deep[0].structure.button.label} == {deepCursor()}
+            </div>
+          );
+        }
+      });
+
+      var Button = React.createClass({
+
+        render: function() {
+          var labelCursor = this.props.cursor.then(Tscope.attr('label'));
+
+          return (
+            <button onClick={labelCursor.bind(this, 'Hello from the deep!')}>{labelCursor()}</button>
+          );
+        }
+
+      });
+
+      React.renderComponent(
+        <Root />,
+        document.body
+      );
+    </script>
+
+  </body>
+</html>
